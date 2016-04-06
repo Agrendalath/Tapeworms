@@ -1,9 +1,20 @@
-#include <SFML/Graphics.hpp>
+// Suppressing certain IDE warnings
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "UnusedImportStatement"
+
 #include <cstdio>
+
+#pragma clang diagnostic pop
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedMacroInspection"
+#define _USE_MATH_DEFINES // Windows OS requires that
+#pragma clang diagnostic pop
+
+#include <SFML/Graphics.hpp>
 #include <chrono>
 #include <thread>
 
-#define _USE_MATH_DEFINES // Windows OS requires that
 #define WIDTH 600
 #define HEIGHT 600
 #define ROT 5
