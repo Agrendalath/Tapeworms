@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <chrono>
 #include <thread>
+
 #define _USE_MATH_DEFINES // Windows OS requires that
 #define WIDTH 600
 #define HEIGHT 600
@@ -15,46 +16,48 @@ bool playerHitWall(sf::Vector2f position) {
 
 
 // Move and rotate player
-void move (sf::Sprite *sprite, sf::Vector2f *movement, float rotation_value) {
+void move(sf::Sprite *sprite, sf::Vector2f *movement, float rotation_value) {
     sprite->rotate(rotation_value);
-    float rotation = sprite->getRotation() * M_PI/180;
-    movement->x = cos(rotation);
-    movement->y = sin(rotation);
+    float rotation = (float) (sprite->getRotation() * M_PI / 180);
+    movement->x = (float) cos(rotation);
+    movement->y = (float) sin(rotation);
     sprite->move(*movement);
-    if (playerHitWall(sprite->getPosition())) {
+    if(playerHitWall(sprite->getPosition())) {
         sprite->move(-*movement);
     }
 }
 
 
 // Handle keyboard events - used outside of game events to prevent delays
-void handle_keys (sf::Window *window, sf::Sprite *sprite, sf::Vector2f *movement) {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+void handle_keys(sf::Window *window, sf::Sprite *sprite, sf::Vector2f *movement) {
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
         move(sprite, movement, -ROT);
-        std::this_thread::sleep_for(std::chrono::milliseconds(25)); // Turning repeatedly won't now result in overall velocity boost
+        std::this_thread::sleep_for(
+                std::chrono::milliseconds(25)); // Turning repeatedly won't now result in overall velocity boost
     }
 
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
         move(sprite, movement, ROT);
-        std::this_thread::sleep_for(std::chrono::milliseconds(25)); // Turning repeatedly won't now result in overall velocity boost
+        std::this_thread::sleep_for(
+                std::chrono::milliseconds(25)); // Turning repeatedly won't now result in overall velocity boost
     }
 
-    // DEBUG speed up
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        // DEBUG speed up
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         move(sprite, movement, 0);
         move(sprite, movement, 0);
         move(sprite, movement, 0);
     }
 
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
         window->close();
 }
 
 
 // Display board
 void display(sf::RenderWindow *window, sf::Sprite *sprite, sf::Text *text, bool *DEBUG) {
-    if (*DEBUG) {
-        int x = sprite->getPosition().x, y = sprite->getPosition().y;
+    if(*DEBUG) {
+        int x = (int) sprite->getPosition().x, y = (int) sprite->getPosition().y;
         std::string message = "X: " + std::to_string(x) + " Y: " + std::to_string(y);
         text->setString(message);
     }
@@ -68,21 +71,21 @@ void display(sf::RenderWindow *window, sf::Sprite *sprite, sf::Text *text, bool 
 
 int main() {
     std::string app_name = "Tapeworms";
-    std::string app_resources = "../../sfml/Tapeworms/Resources/";
+    std::string app_resources = "Resources/";
 
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), app_name);
     window.setFramerateLimit(60);
 
     // Title
     sf::Font font;
-    if (!font.loadFromFile(app_resources + "arial.ttf"))
+    if(!font.loadFromFile(app_resources + "arial.ttf"))
         exit(-1);
     sf::Text text(app_name, font, 50);
-    text.setPosition(WIDTH/2-text.getGlobalBounds().width/2, 0);
+    text.setPosition(WIDTH / 2 - text.getGlobalBounds().width / 2, 0);
 
     // Arrow
     sf::Texture texture;
-    if (!texture.loadFromFile(app_resources + "arrow.png"))
+    if(!texture.loadFromFile(app_resources + "arrow.png"))
         exit(-1);
     sf::Sprite sprite(texture);
     sprite.setOrigin(15, 8); // This will allow rotating around the center
@@ -90,43 +93,43 @@ int main() {
     sprite.setPosition(0, 0);
 
     // Movement
-    sf::Vector2f movement(1,1);
+    sf::Vector2f movement(1, 1);
 
     // Debug state
     bool DEBUG = false;
 
     // Main loop
-    while (window.isOpen()) {
+    while(window.isOpen()) {
         handle_keys(&window, &sprite, &movement);
 
         sf::Event event;
-        while (window.pollEvent(event)) {
-            switch (event.type) {
+        while(window.pollEvent(event)) {
+            switch(event.type) {
 
-            // Handle miscelanous key presses
-            case sf::Event::KeyPressed:
-                // Handle debug
-                if (event.key.code == sf::Keyboard::D) {
-                    DEBUG = !DEBUG;
-                    if (!DEBUG) {
-                        std::string message = "Tapeworms";
-                        text.setString(message);
+                // Handle miscellaneous key presses
+                case sf::Event::KeyPressed:
+                    // Handle debug
+                    if(event.key.code == sf::Keyboard::D) {
+                        DEBUG = !DEBUG;
+                        if(!DEBUG) {
+                            std::string message = "Tapeworms";
+                            text.setString(message);
+                        }
                     }
-                }
-                // Teleport (don't ask, just debug purposes)
-                else if (event.key.code == sf::Keyboard::A) {
-                    sprite.setPosition(300, 300);
-                }
-                break;
+                        // Relocate (debug purposes)
+                    else if(event.key.code == sf::Keyboard::A) {
+                        sprite.setPosition(300, 300);
+                    }
+                    break;
 
 
-            // Handle SIGINT
-            case sf::Event::Closed:
-                window.close();
-                break;
+                    // Handle SIGINT
+                case sf::Event::Closed:
+                    window.close();
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
             }
         }
 
