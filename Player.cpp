@@ -97,4 +97,3 @@ void Player::createObstacle() {
     obstacles.push_back(*obstacle);
     place_obstacle = false;
 }
-

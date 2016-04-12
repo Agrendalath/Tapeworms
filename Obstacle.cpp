@@ -15,12 +15,3 @@ Obstacle::~Obstacle() {
 void Obstacle::addPoint(sf::Vector2f const &point, sf::Color const &color) {
     line->append(sf::Vertex(point, color));
 }
-
-
-
-
-
-
-
-
-
