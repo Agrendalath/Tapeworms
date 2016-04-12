@@ -26,6 +26,6 @@
 static const std::string app_name = "Tapeworms";
 static const std::string app_resources = "Resources/";
 static const std::string app_font = "arial.ttf";
-static const std::string player_texture = "arrow.png";
+static const std::string player_texture = "red_arrow.png";
 
 #endif //TAPEWORMS_MAIN_H

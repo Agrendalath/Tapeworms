@@ -11,7 +11,7 @@ set(CMAKE_MODULE_PATH "/usr/share/SFML/cmake/Modules" ${CMAKE_MODULE_PATH})
 find_package(SFML 2 REQUIRED system window graphics network audio)
 
 set(EXECUTABLE_NAME "Tapeworms")
-set(SOURCE_FILES main.cpp Player.cpp Player.h Game.cpp Game.h main.h)
+set(SOURCE_FILES main.cpp Player.cpp Player.h Game.cpp Game.h main.h Obstacle.cpp Obstacle.h)
 add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
 target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
 

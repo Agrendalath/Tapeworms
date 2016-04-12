@@ -5,9 +5,9 @@ Game::Game() {
 }
 
 Game::~Game() {
-    while(!players.empty()) {
+    while(!players.empty())
         players.pop_back();
-    }
+
     delete text;
     delete window;
 }
@@ -87,6 +87,9 @@ void Game::display() {
     window->clear();
     for(Player &player: players) {
         window->draw(*player.sprite);
+        for(Obstacle &obstacle: player.obstacles) {
+            window->draw(*obstacle.line);
+        }
     }
     window->draw(*text);
     window->display();

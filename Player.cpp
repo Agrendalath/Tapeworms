@@ -1,12 +1,17 @@
 #include "Player.h"
 
 Player::Player() {
+    place_obstacle = true;
     initialize();
 }
 
 Player::~Player() {
+    while(!obstacles.empty())
+        obstacles.pop_back();
+
     delete movement;
     delete sprite;
+    delete color;
 }
 
 void Player::initialize() {
@@ -22,6 +27,9 @@ void Player::initialize() {
 
     // Movement
     movement = new sf::Vector2f(1, 1);
+
+    // Red line
+    color = new sf::Color(255, 0, 0);
 }
 
 // Move and rotate player
@@ -34,6 +42,8 @@ void Player::move(float rotation_value) {
     if(playerHitWall((sprite->getPosition()))) {
         sprite->move(-*movement);
     }
+
+    handleObstacles();
 }
 
 // Handle keyboard events - used outside of game events to prevent delays
@@ -52,9 +62,8 @@ void Player::input() {
 
         // DEBUG speed up
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        move(0);
-        move(0);
-        move(0);
+        for(int i = 0; i < 3; ++i)
+            move(0);
     }
 
         // Relocate (debug purposes)
@@ -67,3 +76,25 @@ void Player::input() {
 bool Player::playerHitWall(sf::Vector2f position) {
     return (position.x < 0 || position.y < 0 || position.x > WIDTH || position.y > HEIGHT);
 }
+
+void Player::handleObstacles() {
+    if(place_obstacle)
+        createObstacle();
+    else {
+        obstacles.back().addPoint(sprite->getPosition(), *color);
+    }
+
+    for(Obstacle obstacle: obstacles) {
+        if(obstacle.line->getBounds().intersects(sprite->getGlobalBounds())) {
+            ++collisions;
+            printf("BOOM %d\n", collisions);
+        }
+    }
+}
+
+void Player::createObstacle() {
+    Obstacle *obstacle = new Obstacle(sprite->getPosition(), *color);
+    obstacles.push_back(*obstacle);
+    place_obstacle = false;
+}
+

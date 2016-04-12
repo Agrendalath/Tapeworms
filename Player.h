@@ -2,6 +2,7 @@
 #define TAPEWORMS_PLAYER_H
 
 #include "main.h"
+#include "Obstacle.h"
 
 class Player {
 public:
@@ -13,8 +14,13 @@ public:
 
     void move(float rotation_value);
 
+    void handleObstacles();
+
+    void createObstacle();
+
     sf::Vector2f *movement;
     sf::Sprite *sprite;
+    std::vector<Obstacle> obstacles;
 
 private:
     void initialize();
@@ -22,6 +28,12 @@ private:
     bool playerHitWall(sf::Vector2f position);
 
     sf::Texture texture;
+
+    sf::Color *color;
+
+    bool place_obstacle;
+
+    int collisions;
 };
 
 
