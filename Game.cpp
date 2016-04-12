@@ -2,6 +2,7 @@
 
 
 Game::Game() {
+    srand((unsigned int) time(NULL));
 }
 
 Game::~Game() {
@@ -21,7 +22,8 @@ void Game::initialize() {
     if(!font.loadFromFile(app_resources + app_font))
         exit(-1);
     text = new sf::Text(app_name, font, 50);
-    text->setPosition(WIDTH / 2 - text->getGlobalBounds().width / 2, 0);
+//    text->setPosition(WIDTH / 2 - text->getGlobalBounds().width / 2, 0);
+    text->setPosition(0, 0);
 
     create_players();
 }
@@ -80,15 +82,31 @@ void Game::play() {
 void Game::display() {
     if(DEBUG) {
         int x = (int) players[0].sprite->getPosition().x, y = (int) players[0].sprite->getPosition().y;
-        std::string message = "X: " + std::to_string(x) + " Y: " + std::to_string(y);
+//        std::string message = "X: " + std::to_string(x) + " Y: " + std::to_string(y);
+        int a = (int) players[0].sprite->getGlobalBounds().left, b = (int) players[0].sprite->getGlobalBounds().top;
+        std::string message = "X: " + std::to_string(x) + " " + std::to_string(a) + " Y: " + std::to_string(y) + " " + std::to_string(b);
+//        message += "Left: " + std::to_string(a) + " Top: " + std::to_string(b);
         text->setString(message);
     }
 
     window->clear();
     for(Player &player: players) {
         window->draw(*player.sprite);
+        sf::FloatRect rect;
+        rect = player.sprite->getGlobalBounds();
+        sf::RectangleShape rectangle(sf::Vector2f(rect.height,rect.width));
+        rectangle.setPosition(rect.left,rect.top);
+        rectangle.setFillColor(sf::Color::Green);
+        window->draw(rectangle);
         for(Obstacle &obstacle: player.obstacles) {
+            sf::FloatRect rect2;
+            rect2 = obstacle.line->getBounds();
+            sf::RectangleShape rectangle2(sf::Vector2f(rect2.height,rect2.width));
+            rectangle2.setPosition(rect2.left,rect2.top);
+            rectangle2.setFillColor(sf::Color::Red);
+
             window->draw(*obstacle.line);
+            window->draw(rectangle2);
         }
     }
     window->draw(*text);

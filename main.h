@@ -17,6 +17,7 @@
 #include <SFML/Graphics.hpp>
 #include <chrono>
 #include <thread>
+#include <time.h>
 
 #define WIDTH 600
 #define HEIGHT 600
@@ -26,6 +27,6 @@
 static const std::string app_name = "Tapeworms";
 static const std::string app_resources = "Resources/";
 static const std::string app_font = "arial.ttf";
-static const std::string player_texture = "red_arrow.png";
+//static const std::string player_texture = "red_arrow.png";
 
 #endif //TAPEWORMS_MAIN_H

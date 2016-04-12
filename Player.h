@@ -19,7 +19,8 @@ public:
     void createObstacle();
 
     sf::Vector2f *movement;
-    sf::Sprite *sprite;
+//    sf::Sprite *sprite;
+    sf::CircleShape *sprite;
     std::vector<Obstacle> obstacles;
 
 private:
@@ -27,13 +28,17 @@ private:
 
     bool playerHitWall(sf::Vector2f position);
 
-    sf::Texture texture;
+//    sf::Texture texture;
 
     sf::Color *color;
 
-    bool place_obstacle;
+    bool placed_obstacle;
+
+    bool should_place_obstacle;
 
     int collisions;
+
+    void placeObstacles();
 };
 
 

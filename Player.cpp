@@ -1,7 +1,6 @@
 #include "Player.h"
 
 Player::Player() {
-    place_obstacle = true;
     initialize();
 }
 
@@ -15,13 +14,18 @@ Player::~Player() {
 }
 
 void Player::initialize() {
-    // Load texture
-    if(!texture.loadFromFile(app_resources + player_texture))
-        exit(-1);
-
-    // Convert texture to sprite
-    sprite = new sf::Sprite(texture);
-    sprite->setOrigin(15, 8); // This will allow rotating around the center
+//    // Load texture
+//    if(!texture.loadFromFile(app_resources + player_texture))
+//        exit(-1);
+//
+//    // Convert texture to sprite
+//    sprite = new sf::Sprite(texture);
+    int radius = 5;
+    sprite = new sf::CircleShape(radius);
+//    sprite->setFillColor(sf::Color::Red);
+    sprite->setOutlineColor(sf::Color::Red);
+    sprite->setOrigin(radius, radius);
+//    sprite->setOrigin(15, 8); // This will allow rotating around the center
     sprite->rotate(45);
     sprite->setPosition(0, 0);
 
@@ -43,6 +47,7 @@ void Player::move(float rotation_value) {
         sprite->move(-*movement);
     }
 
+    placeObstacles();
     handleObstacles();
 }
 
@@ -77,23 +82,55 @@ bool Player::playerHitWall(sf::Vector2f position) {
     return (position.x < 0 || position.y < 0 || position.x > WIDTH || position.y > HEIGHT);
 }
 
+void Player::placeObstacles() {
+    if(should_place_obstacle && !(rand() % 40))
+        should_place_obstacle = false;
+
+    else if(!(rand() % 20))
+        should_place_obstacle = true;
+}
+
 void Player::handleObstacles() {
-    if(place_obstacle)
+    if(!placed_obstacle && should_place_obstacle) {
         createObstacle();
+        placed_obstacle = true;
+    }
+    else if(placed_obstacle && should_place_obstacle) {
+        sf::Vector2f less(*movement);
+        less.x *=10;
+        less.y *=10;
+        obstacles.back().addPoint(sprite->getPosition()-less, *color);
+    }
     else {
-        obstacles.back().addPoint(sprite->getPosition(), *color);
+        placed_obstacle = false;
     }
 
     for(Obstacle obstacle: obstacles) {
-        if(obstacle.line->getBounds().intersects(sprite->getGlobalBounds())) {
+        sf::FloatRect first(obstacle.line->getBounds()), second(sprite->getGlobalBounds());
+//        first.width = 1;
+//        second.width = 10;
+//        second.height = 10;
+
+//        if(obstacle.line->getBounds().intersects(sprite->getGlobalBounds())) {
+        if(first.intersects(second)) {
             ++collisions;
             printf("BOOM %d\n", collisions);
+//            printf("Obstacle: %d:%d, player: %d:%d", obstacle.line->getBounds().);
         }
     }
 }
 
 void Player::createObstacle() {
-    Obstacle *obstacle = new Obstacle(sprite->getPosition(), *color);
+
+//    Obstacle *obstacle = new Obstacle(sprite->getPosition(), *color);
+    sf::Vector2f less(*movement);
+    less.x *=10;
+    less.y *=10;
+    Obstacle *obstacle = new Obstacle(sprite->getPosition()-less, *color);
     obstacles.push_back(*obstacle);
-    place_obstacle = false;
+    placed_obstacle = false;
 }
+
+
+
+
