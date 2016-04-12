@@ -22,12 +22,14 @@ public:
 //    sf::Sprite *sprite;
     sf::CircleShape *sprite;
     std::vector<Obstacle> obstacles;
-    int obstacles_map[WIDTH+1][HEIGHT+1];
+    int obstacles_map[WIDTH + 1][HEIGHT + 1];
 
 private:
     void initialize();
 
-    bool playerHitWall(sf::Vector2f position);
+    bool collidesWithWall(sf::FloatRect coordinates);
+
+    bool collidesWithObstacle(sf::FloatRect coordinates);
 
 //    sf::Texture texture;
 
@@ -40,6 +42,10 @@ private:
     int collisions;
 
     void placeObstacles();
+
+    sf::Vector2f obstaclePoint();
+
+    void addPointToMap(sf::Vector2f position);
 };
 
 

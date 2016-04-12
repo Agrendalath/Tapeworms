@@ -27,7 +27,7 @@ void Player::initialize() {
     sprite->setOrigin(radius, radius);
 //    sprite->setOrigin(15, 8); // This will allow rotating around the center
     sprite->rotate(45);
-    sprite->setPosition(0, 0);
+    sprite->setPosition(10, 10);
 
     // Movement
     movement = new sf::Vector2f(1, 1);
@@ -43,12 +43,10 @@ bool Player::move(float rotation_value) {
     movement->x = (float) cos(rotation);
     movement->y = (float) sin(rotation);
     sprite->move(*movement);
-    if(playerHitWall((sprite->getPosition()))) {
+    if(collidesWithWall(sprite->getGlobalBounds())) {
         sprite->move(-*movement);
         return false;
     }
-
-    placeObstacles();
 
     if(handleObstacles()) {
         sprite->move(-*movement);
@@ -84,8 +82,9 @@ void Player::input() {
 }
 
 // Simple collisions, you can use getGlobalBounds() to check them accurately
-bool Player::playerHitWall(sf::Vector2f position) {
-    return (position.x < 0 || position.y < 0 || position.x > WIDTH || position.y > HEIGHT);
+bool Player::collidesWithWall(sf::FloatRect coordinates) {
+    return (coordinates.left < 0 || coordinates.left + coordinates.width > WIDTH
+            || coordinates.top < 0 || coordinates.top + coordinates.height > HEIGHT);
 }
 
 void Player::placeObstacles() {
@@ -97,25 +96,46 @@ void Player::placeObstacles() {
 }
 
 bool Player::handleObstacles() {
+    placeObstacles();
+
     if(!placed_obstacle && should_place_obstacle) {
         createObstacle();
         placed_obstacle = true;
     }
     else if(placed_obstacle && should_place_obstacle) {
-        sf::Vector2f less(*movement);
-        less.x *= 10;
-        less.y *= 10;
-        obstacles.back().addPoint(sprite->getPosition() - less, *color);
-        unsigned x = (unsigned) (sprite->getPosition().x - less.x);
-        unsigned y = (unsigned) (sprite->getPosition().y - less.y);
-        if(x <= WIDTH && y <= HEIGHT)
-            obstacles_map[x][y] = 1;
+        sf::Vector2f point = obstaclePoint();
+        obstacles.back().addPoint(point, *color);
+        addPointToMap(point);
     }
     else {
         placed_obstacle = false;
     }
 
-    sf::FloatRect coordinates = sprite->getGlobalBounds();
+    return collidesWithObstacle(sprite->getGlobalBounds());
+}
+
+void Player::createObstacle() {
+    sf::Vector2f point = obstaclePoint();
+    Obstacle *obstacle = new Obstacle(point, *color);
+    obstacles.push_back(*obstacle);
+    addPointToMap(point);
+}
+
+sf::Vector2f Player::obstaclePoint() {
+    sf::Vector2f less(*movement);
+    less.x *= 10;
+    less.y *= 10;
+    return sprite->getPosition() - less;
+}
+
+void Player::addPointToMap(sf::Vector2f position) {
+    unsigned x = (unsigned) (position.x);
+    unsigned y = (unsigned) (position.y);
+    if(x <= WIDTH && y <= HEIGHT)
+        obstacles_map[x][y] = 1;
+}
+
+bool Player::collidesWithObstacle(sf::FloatRect coordinates) {
     for(unsigned i = (unsigned) coordinates.left; i < coordinates.left + coordinates.width; ++i) {
         for(unsigned j = (unsigned) coordinates.top; j < coordinates.top + coordinates.height; ++j) {
             if(obstacles_map[i][j]) {
@@ -127,19 +147,3 @@ bool Player::handleObstacles() {
     }
     return false;
 }
-
-void Player::createObstacle() {
-    sf::Vector2f less(*movement);
-    less.x *= 10;
-    less.y *= 10;
-    Obstacle *obstacle = new Obstacle(sprite->getPosition() - less, *color);
-    obstacles.push_back(*obstacle);
-    unsigned x = (unsigned) (sprite->getPosition().x - less.x);
-    unsigned y = (unsigned) (sprite->getPosition().y - less.y);
-    if(x <= WIDTH && y <= HEIGHT)
-        obstacles_map[x][y] = 1;
-}
-
-
-
-

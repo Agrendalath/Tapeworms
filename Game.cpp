@@ -89,7 +89,8 @@ void Game::display() {
         int x = (int) players[0].sprite->getPosition().x, y = (int) players[0].sprite->getPosition().y;
 //        std::string message = "X: " + std::to_string(x) + " Y: " + std::to_string(y);
         int a = (int) players[0].sprite->getGlobalBounds().left, b = (int) players[0].sprite->getGlobalBounds().top;
-        std::string message = "X: " + std::to_string(x) + " " + std::to_string(a) + " Y: " + std::to_string(y) + " " + std::to_string(b);
+        std::string message = "X: " + std::to_string(x) + " " + std::to_string(a) + " Y: " + std::to_string(y) + " " +
+                              std::to_string(b);
 //        message += "Left: " + std::to_string(a) + " Top: " + std::to_string(b);
         text->setString(message);
     }
