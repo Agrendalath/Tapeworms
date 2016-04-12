@@ -12,9 +12,9 @@ public:
 
     void input();
 
-    void move(float rotation_value);
+    bool move(float rotation_value);
 
-    void handleObstacles();
+    bool handleObstacles();
 
     void createObstacle();
 
@@ -22,6 +22,7 @@ public:
 //    sf::Sprite *sprite;
     sf::CircleShape *sprite;
     std::vector<Obstacle> obstacles;
+    int obstacles_map[WIDTH+1][HEIGHT+1];
 
 private:
     void initialize();

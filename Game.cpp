@@ -22,8 +22,8 @@ void Game::initialize() {
     if(!font.loadFromFile(app_resources + app_font))
         exit(-1);
     text = new sf::Text(app_name, font, 50);
-//    text->setPosition(WIDTH / 2 - text->getGlobalBounds().width / 2, 0);
-    text->setPosition(0, 0);
+    text->setPosition(WIDTH / 2 - text->getGlobalBounds().width / 2, 0);
+//    text->setPosition(0, 0);
 
     create_players();
 }
@@ -39,7 +39,7 @@ void Game::create_players() {
 void Game::play() {
     initialize();
 
-    while(window->isOpen()) {
+    while(window->isOpen() && !END) {
         input();
         for(Player &player: players) {
             player.input();
@@ -73,7 +73,12 @@ void Game::play() {
         }
 
         for(Player &player: players) {
-            player.move(0);
+            if(!player.move(0)) {
+                END = true;
+                text->setString("GAME OVER");
+                display();
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            }
         }
         display();
     }
@@ -92,21 +97,8 @@ void Game::display() {
     window->clear();
     for(Player &player: players) {
         window->draw(*player.sprite);
-        sf::FloatRect rect;
-        rect = player.sprite->getGlobalBounds();
-        sf::RectangleShape rectangle(sf::Vector2f(rect.height,rect.width));
-        rectangle.setPosition(rect.left,rect.top);
-        rectangle.setFillColor(sf::Color::Green);
-        window->draw(rectangle);
         for(Obstacle &obstacle: player.obstacles) {
-            sf::FloatRect rect2;
-            rect2 = obstacle.line->getBounds();
-            sf::RectangleShape rectangle2(sf::Vector2f(rect2.height,rect2.width));
-            rectangle2.setPosition(rect2.left,rect2.top);
-            rectangle2.setFillColor(sf::Color::Red);
-
             window->draw(*obstacle.line);
-            window->draw(rectangle2);
         }
     }
     window->draw(*text);

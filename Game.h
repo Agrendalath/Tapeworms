@@ -29,6 +29,9 @@ private:
 
     // Debug state
     bool DEBUG = false;
+
+    // Game has ended
+    bool END;
 };
 
 
