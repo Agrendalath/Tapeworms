@@ -22,7 +22,7 @@ public:
 //    sf::Sprite *sprite;
     sf::CircleShape *sprite;
     std::vector<Obstacle> obstacles;
-    int obstacles_map[WIDTH + 1][HEIGHT + 1];
+    int obstacles_map[WIDTH + 1][HEIGHT + 1]{};
 
 private:
     void initialize();
@@ -46,6 +46,9 @@ private:
     sf::Vector2f obstaclePoint();
 
     void addPointToMap(sf::Vector2f position);
+
+    // Time used for determining if user should leave obstacles
+    time_t created, now;
 };
 
 

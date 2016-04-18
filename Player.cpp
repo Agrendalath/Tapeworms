@@ -14,6 +14,7 @@ Player::~Player() {
 }
 
 void Player::initialize() {
+//    obstacles_map = {0};
 //    // Load texture
 //    if(!texture.loadFromFile(app_resources + player_texture))
 //        exit(-1);
@@ -34,6 +35,8 @@ void Player::initialize() {
 
     // Red line
     color = new sf::Color(255, 0, 0);
+
+    time(&created);
 }
 
 // Move and rotate player
@@ -96,7 +99,10 @@ void Player::placeObstacles() {
 }
 
 bool Player::handleObstacles() {
-    placeObstacles();
+    // No obstacles for 2 seconds
+    time(&now);
+    if(difftime(now, created) > 1)
+        placeObstacles();
 
     if(!placed_obstacle && should_place_obstacle) {
         createObstacle();
@@ -129,8 +135,8 @@ sf::Vector2f Player::obstaclePoint() {
 }
 
 void Player::addPointToMap(sf::Vector2f position) {
-    unsigned x = (unsigned) (position.x);
-    unsigned y = (unsigned) (position.y);
+    int x = (int) (position.x);
+    int y = (int) (position.y);
     if(x <= WIDTH && y <= HEIGHT)
         obstacles_map[x][y] = 1;
 }

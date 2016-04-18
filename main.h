@@ -17,7 +17,7 @@
 #include <SFML/Graphics.hpp>
 #include <chrono>
 #include <thread>
-#include <time.h>
+#include <ctime>
 
 #define WIDTH 600
 #define HEIGHT 600
