@@ -1,7 +1,7 @@
 #include "Player.h"
 
-Player::Player() {
-    initialize();
+Player::Player(int coord_multiplier) {
+    initialize(coord_multiplier);
 }
 
 Player::~Player() {
@@ -13,7 +13,7 @@ Player::~Player() {
     delete color;
 }
 
-void Player::initialize() {
+void Player::initialize(int coord_multiplier) {
 //    obstacles_map = {0};
 //    // Load texture
 //    if(!texture.loadFromFile(app_resources + player_texture))
@@ -28,7 +28,7 @@ void Player::initialize() {
     sprite->setOrigin(radius, radius);
 //    sprite->setOrigin(15, 8); // This will allow rotating around the center
     sprite->rotate(45);
-    sprite->setPosition(10, 10);
+    sprite->setPosition(10 * coord_multiplier, 10 * coord_multiplier);
 
     // Movement
     movement = new sf::Vector2f(1, 1);

@@ -30,8 +30,8 @@ void Game::initialize() {
 
 void Game::create_players() {
     for(int i = 0; i < NUMBER_OF_PLAYERS; ++i) {
-        Player *player = new Player();
-        players.push_back(*player);
+        Player *player = new Player(i * 10 + 1);
+        players.push_back(player);
     }
 }
 
@@ -41,8 +41,8 @@ void Game::play() {
 
     while(window->isOpen() && !END) {
         input();
-        for(Player &player: players) {
-            player.input();
+        for(Player *player: players) {
+            player->input();
         }
 
         sf::Event event;
@@ -72,8 +72,8 @@ void Game::play() {
             }
         }
 
-        for(Player &player: players) {
-            if(!player.move(0)) {
+        for(Player *player: players) {
+            if(!player->move(0)) {
                 END = true;
                 text->setString("GAME OVER");
                 display();
@@ -86,9 +86,9 @@ void Game::play() {
 
 void Game::display() {
     if(DEBUG) {
-        int x = (int) players[0].sprite->getPosition().x, y = (int) players[0].sprite->getPosition().y;
+        int x = (int) players[0]->sprite->getPosition().x, y = (int) players[0]->sprite->getPosition().y;
 //        std::string message = "X: " + std::to_string(x) + " Y: " + std::to_string(y);
-        int a = (int) players[0].sprite->getGlobalBounds().left, b = (int) players[0].sprite->getGlobalBounds().top;
+        int a = (int) players[0]->sprite->getGlobalBounds().left, b = (int) players[0]->sprite->getGlobalBounds().top;
         std::string message = "X: " + std::to_string(x) + " " + std::to_string(a) + " Y: " + std::to_string(y) + " " +
                               std::to_string(b);
 //        message += "Left: " + std::to_string(a) + " Top: " + std::to_string(b);
@@ -96,9 +96,9 @@ void Game::display() {
     }
 
     window->clear();
-    for(Player &player: players) {
-        window->draw(*player.sprite);
-        for(Obstacle &obstacle: player.obstacles) {
+    for(Player *player: players) {
+        window->draw(*player->sprite);
+        for(Obstacle &obstacle: player->obstacles) {
             window->draw(*obstacle.line);
         }
     }

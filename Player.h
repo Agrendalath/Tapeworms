@@ -6,7 +6,7 @@
 
 class Player {
 public:
-    Player();
+    Player(int coord_multiplier);
 
     ~Player();
 
@@ -25,7 +25,7 @@ public:
     int obstacles_map[WIDTH + 1][HEIGHT + 1]{};
 
 private:
-    void initialize();
+    void initialize(int coord_multiplier);
 
     bool collidesWithWall(sf::FloatRect coordinates);
 

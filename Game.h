@@ -25,7 +25,7 @@ private:
     void input();
 
     sf::Font font;
-    std::vector<Player> players;
+    std::vector<Player *> players;
 
     // Debug state
     bool DEBUG = false;

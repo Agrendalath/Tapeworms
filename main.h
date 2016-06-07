@@ -18,11 +18,12 @@
 #include <chrono>
 #include <thread>
 #include <ctime>
+#include <cmath>
 
 #define WIDTH 600
 #define HEIGHT 600
 #define ROT 5
-#define NUMBER_OF_PLAYERS 1
+#define NUMBER_OF_PLAYERS 2
 
 static const std::string app_name = "Tapeworms";
 static const std::string app_resources = "Resources/";
